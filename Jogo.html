@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Dominó Minimalista</title>
+    <style>
+        body { background-color: #2e7d32; font-family: sans-serif; display: flex; flex-direction: column; align-items: center; }
+        h1 { color: white; }
+        
+        /* Estilo da Peça */
+        .domino {
+            width: 50px;
+            height: 100px;
+            background: #f5f5f5;
+            border-radius: 5px;
+            border: 2px solid #333;
+            display: inline-flex;
+            flex-direction: column;
+            cursor: pointer;
+            margin: 5px;
+            box-shadow: 2px 2px 5px rgba(0,0,0,0.3);
+        }
+        .half {
+            height: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 24px;
+            font-weight: bold;
+            color: #333;
+        }
+        .divider { border-top: 2px solid #333; width: 80%; margin: 0 auto; }
+
+        #mesa {
+            width: 80%;
+            min-height: 200px;
+            border: 3px dashed #ffffff55;
+            margin-bottom: 20px;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        #mao-jogador {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            background: rgba(0,0,0,0.2);
+            padding: 10px;
+            border-radius: 10px;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Dominó Web</h1>
+    
+    <div id="mesa">
+        <p style="color: #fff">Clique em uma peça da sua mão para jogar na mesa</p>
+    </div>
+
+    <div id="mao-jogador"></div>
+
+    <script>
+        const maoElement = document.getElementById('mao-jogador');
+        const mesaElement = document.getElementById('mesa');
+
+        // Gera todas as 28 peças de dominó
+        function gerarPecas() {
+            let pecas = [];
+            for (let i = 0; i <= 6; i++) {
+                for (let j = i; j <= 6; j++) {
+                    pecas.push([i, j]);
+                }
+            }
+            return pecas.sort(() => Math.random() - 0.5); // Embaralha
+        }
+
+        function criarElementoPeca(valores) {
+            const div = document.createElement('div');
+            div.className = 'domino';
+            div.innerHTML = `
+                <div class="half">${valores[0]}</div>
+                <div class="divider"></div>
+                <div class="half">${valores[1]}</div>
+            `;
+            
+            div.onclick = () => {
+                mesaElement.appendChild(div);
+                div.onclick = null; // Remove o evento após jogar
+            };
+            
+            return div;
+        }
+
+        // Inicia o jogo com 7 peças para o jogador
+        const todasPecas = gerarPecas();
+        const maoInicial = todasPecas.slice(0, 7);
+
+        maoInicial.forEach(p => {
+            maoElement.appendChild(criarElementoPeca(p));
+        });
+    </script>
+</body>
+</html>
